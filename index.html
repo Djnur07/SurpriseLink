@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Something For You</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            animation: fadeIn 1s ease;
+        }
+
+        .emoji {
+            font-size: 64px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-size: clamp(32px, 6vw, 52px);
+            margin: 0 0 15px;
+        }
+
+        p {
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        button {
+            border: none;
+            padding: 16px 30px;
+            border-radius: 999px;
+            background: white;
+            color: black;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .progress {
+            width: 100%;
+            height: 7px;
+            background: #222;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 30px 0 15px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: white;
+            transition: width .1s linear;
+        }
+
+        #percentage {
+            color: #666;
+        }
+
+        .prank-image {
+            width: min(90vw, 400px);
+            max-height: 45vh;
+            object-fit: contain;
+            border-radius: 20px;
+            display: block;
+            margin: 0 auto 25px;
+        }
+
+        .shock {
+            animation: flash .12s infinite;
+        }
+
+        @keyframes flash {
+            0% {
+                background: #000;
+            }
+
+            50% {
+                background: #fff;
+            }
+
+            100% {
+                background: #000;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+
+    <div class="emoji">🤫</div>
+
+    <h1>Ada sesuatu buat kamu.</h1>
+
+    <p>Jangan bilang siapa-siapa...</p>
+
+    <button onclick="openSurprise()">
+        BUKA KEJUTANNYA
+    </button>
+
+</div>
+
+<script>
+
+function openSurprise() {
+
+    document.getElementById("app").innerHTML = `
+
+        <div class="emoji">⏳</div>
+
+        <h1>Menyiapkan kejutan...</h1>
+
+        <p id="loadingText">
+            Mohon tunggu sebentar...
+        </p>
+
+        <div class="progress">
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
+        </div>
+
+        <div id="percentage">0%</div>
+
+    `;
+
+    let progress = 0;
+
+    const texts = [
+        "Mengumpulkan sesuatu...",
+        "Menyiapkan kejutan...",
+        "Memproses...",
+        "Hampir selesai...",
+        "Sedikit lagi...",
+        "Jangan pergi dulu...",
+        "99%...",
+        "Selesai!"
+    ];
+
+    const loading = setInterval(function() {
+
+        progress++;
+
+        document.getElementById("progressBar").style.width =
+            progress + "%";
+
+        document.getElementById("percentage").textContent =
+            progress + "%";
+
+        if (progress % 15 === 0) {
+
+            let index = Math.floor(progress / 15);
+
+            if (index >= texts.length) {
+                index = texts.length - 1;
+            }
+
+            document.getElementById("loadingText").textContent =
+                texts[index];
+        }
+
+        if (progress >= 100) {
+
+            clearInterval(loading);
+
+            setTimeout(showPrank, 700);
+        }
+
+    }, 40);
+}
+
+
+function showPrank() {
+
+    document.body.classList.add("shock");
+
+    setTimeout(function() {
+
+        document.body.classList.remove("shock");
+
+        document.getElementById("app").innerHTML = `
+
+            <div>
+
+                <img
+                    src="monyet.png"
+                    class="prank-image"
+                    alt="Monyet">
+
+                <div
+                    class="emoji"
+                    style="animation: bounce .5s infinite alternate;">
+                    😂
+                </div>
+
+                <h1>HAHA, KENA PRANK!</h1>
+
+                <p>
+                    Kamu benar-benar membukanya sampai selesai. 😭
+                </p>
+
+                <button onclick="location.reload()">
+                    COBA LAGI
+                </button>
+
+            </div>
+
+        `;
+
+    }, 1000);
+}
+
+</script>
+
+</body>
+</html>
+
+
